@@ -11,7 +11,7 @@ PREFERRED_PROVIDER_virtual/kernel = ""
 # daemon needs to be running
 IMAGE_CMD_DOCKER ??= "/usr/bin/docker"
 
-# docker container iamge defaults
+# docker container image defaults
 DOCKER_IMAGE_NAME ??= "${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.docker"
 DOCKER_IMAGE_TAG ??= "latest"
 DOCKER_IMAGE_NAME_EXPORT ??= "${IMAGE_NAME}${IMAGE_NAME_SUFFIX}-export.docker:${DOCKER_IMAGE_TAG}"
@@ -20,7 +20,7 @@ DOCKER_IMAGE_NAME_EXPORT ??= "${IMAGE_NAME}${IMAGE_NAME_SUFFIX}-export.docker:${
 DOCKER_CONTAINER_ID = "$(${IMAGE_CMD_DOCKER} ps -aqf 'ancestor=${DOCKER_IMAGE_NAME}')"
 
 IMAGE_CMD_docker (){
-	# create a tar archieve that we import to docker
+	# create a tar archive that we import to docker
 	${IMAGE_CMD_TAR} -cvf - -C ${IMAGE_ROOTFS} . 2>&- | ${IMAGE_CMD_DOCKER} import - ${DOCKER_IMAGE_NAME}
 
 	# these are commands which are meant to be run inside the container for setting up internals
