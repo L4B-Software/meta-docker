@@ -21,19 +21,19 @@ DOCKER_CONTAINER_ID = "$(${IMAGE_CMD_DOCKER} ps -aqf 'ancestor=${DOCKER_IMAGE_NA
 
 IMAGE_CMD_docker (){
 	# create a tar archive that we import to docker
-	${IMAGE_CMD_TAR} -cvf - -C ${IMAGE_ROOTFS} . 2>&- | ${IMAGE_CMD_DOCKER} import - ${DOCKER_IMAGE_NAME}
+	${IMAGE_CMD_TAR} -cvf - -C ${IMAGE_ROOTFS} . 2>&- | ${IMAGE_CMD_DOCKER} import - ${DOCKER_IMAGE_NAME}:temporary
 
 	# these are commands which are meant to be run inside the container for setting up internals
 	${DOCKER_EXTRA_CMDS}
 
 	# rename the work container to the output target name
-	${IMAGE_CMD_DOCKER} tag ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME_EXPORT}
+	${IMAGE_CMD_DOCKER} tag ${DOCKER_IMAGE_NAME}:temporary ${DOCKER_IMAGE_NAME_EXPORT}
 
 	# save the image to a tar achieve
 	${IMAGE_CMD_DOCKER} save --output ${DEPLOY_DIR_IMAGE}/${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME_EXPORT}
 
 	#remove old imported image (from yocto rootfs)
-	${IMAGE_CMD_DOCKER} rmi ${DOCKER_IMAGE_NAME}
+	${IMAGE_CMD_DOCKER} rmi ${DOCKER_IMAGE_NAME}:temporary
 
 	# delete image as we now exported it
 	${IMAGE_CMD_DOCKER} rmi ${DOCKER_IMAGE_NAME_EXPORT}
